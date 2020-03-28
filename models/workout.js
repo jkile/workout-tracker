@@ -26,8 +26,33 @@ const WorkoutSchema = new Schema({
         reps: Number,
         sets: Number,
         distance: Number,
-    }]
+    }],
+    totalDuration: {
+        type: Number,
+        default: function(){
+            if(this.exercises.length = 1){
+                return this.exercises[0].duration;
+            } else {
+                return 0;
+            }
+        }
+    }
 });
+
+WorkoutSchema.methods.setTotalDuration = function () {
+    if (this.exercises.length > 0) {
+        // this.totalDuration = this.exercises.reduce((acc, item) => acc + item.duration, 0)
+        // return this.totalDuration;
+        let currentValue;
+        let finalValue = 0;
+        for(let i = 0; i < this.exercises.length; i++){
+            currentValue = this.exercises[i].duration;
+            finalValue += currentValue;
+        }
+        this.totalDuration = finalValue;
+        return this.totalDuration;
+    }
+}
 
 const Workout = mongoose.model("Workout", WorkoutSchema);
 
